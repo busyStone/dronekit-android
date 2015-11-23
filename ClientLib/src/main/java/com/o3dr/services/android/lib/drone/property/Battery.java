@@ -12,13 +12,13 @@ public class Battery implements DroneAttribute {
     private double batteryRemain;
     private double batteryCurrent;
     private Double batteryDischarge;
-    private double batteryTemperature;
+    private Double batteryTemperature;
 
     public Battery(){}
 
     public Battery(double batteryVoltage, double batteryRemain, double batteryCurrent,
                    Double batteryDischarge,
-                   double batteryTemperature) {
+                   Double batteryTemperature) {
         this.batteryVoltage = batteryVoltage;
         this.batteryRemain = batteryRemain;
         this.batteryCurrent = batteryCurrent;
@@ -42,7 +42,7 @@ public class Battery implements DroneAttribute {
         this.batteryDischarge = batteryDischarge;
     }
 
-    public void setBatteryTemperature(double batteryTemperature){
+    public void setBatteryTemperature(Double batteryTemperature){
         this.batteryTemperature = batteryTemperature;
     }
 
@@ -62,7 +62,7 @@ public class Battery implements DroneAttribute {
         return batteryDischarge;
     }
 
-    public double getBatteryTemperature() {return batteryTemperature; }
+    public Double getBatteryTemperature() {return batteryTemperature; }
 
     @Override
     public int describeContents() {
@@ -75,7 +75,7 @@ public class Battery implements DroneAttribute {
         dest.writeDouble(this.batteryRemain);
         dest.writeDouble(this.batteryCurrent);
         dest.writeValue(this.batteryDischarge);
-        dest.writeDouble(this.batteryTemperature);
+        dest.writeValue(this.batteryTemperature);
     }
 
     private Battery(Parcel in) {
@@ -83,7 +83,7 @@ public class Battery implements DroneAttribute {
         this.batteryRemain = in.readDouble();
         this.batteryCurrent = in.readDouble();
         this.batteryDischarge = (Double) in.readValue(Double.class.getClassLoader());
-        this.batteryTemperature = in.readDouble();
+        this.batteryTemperature = (Double) in.readValue(Double.class.getClassLoader());
     }
 
     public static final Creator<Battery> CREATOR = new Creator<Battery>() {
