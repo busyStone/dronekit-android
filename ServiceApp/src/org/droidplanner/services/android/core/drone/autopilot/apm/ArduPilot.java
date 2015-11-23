@@ -12,6 +12,7 @@ import com.MAVLink.ardupilotmega.msg_mag_cal_report;
 import com.MAVLink.ardupilotmega.msg_mount_configure;
 import com.MAVLink.ardupilotmega.msg_mount_status;
 import com.MAVLink.ardupilotmega.msg_radio;
+import com.MAVLink.common.msg_battery_status;
 import com.MAVLink.common.msg_global_position_int;
 import com.MAVLink.common.msg_gps_raw_int;
 import com.MAVLink.common.msg_heartbeat;
@@ -567,9 +568,17 @@ public abstract class ArduPilot extends GenericMavLinkDrone {
 
             case msg_sys_status.MAVLINK_MSG_ID_SYS_STATUS:
                 msg_sys_status m_sys = (msg_sys_status) message;
-                processBatteryUpdate(m_sys.voltage_battery / 1000.0, m_sys.battery_remaining,
-                        m_sys.current_battery / 100.0);
                 checkControlSensorsHealth(m_sys);
+                break;
+            case msg_battery_status.MAVLINK_MSG_ID_BATTERY_STATUS:
+                msg_battery_status status = (msg_battery_status)message;
+                double voltage = 0.0;
+                for (int i = 0; i < status.voltages.length; i++){
+                    voltage += status.voltages[i];
+                }
+
+                processBatteryUpdate(voltage / 1000.0, status.battery_remaining,
+                        status.current_battery / 100.0, status.temperature / 100.0);
                 break;
 
             case msg_radio.MAVLINK_MSG_ID_RADIO:
@@ -761,12 +770,16 @@ public abstract class ArduPilot extends GenericMavLinkDrone {
         return (1 - battRemain / 100.0) * battCap.value;
     }
 
-    protected void processBatteryUpdate(double voltage, double remain, double current) {
-        if (battery.getBatteryVoltage() != voltage || battery.getBatteryRemain() != remain || battery.getBatteryCurrent() != current) {
+    protected void processBatteryUpdate(double voltage, double remain, double current, double temperature) {
+        if (battery.getBatteryVoltage() != voltage
+                || battery.getBatteryRemain() != remain
+                || battery.getBatteryCurrent() != current
+                || battery.getBatteryTemperature() != temperature) {
             battery.setBatteryVoltage(voltage);
             battery.setBatteryRemain(remain);
             battery.setBatteryCurrent(current);
             battery.setBatteryDischarge(getBattDischarge(remain));
+            battery.setBatteryTemperature(temperature);
 
             notifyDroneEvent(DroneInterfaces.DroneEventsType.BATTERY);
         }

@@ -12,15 +12,18 @@ public class Battery implements DroneAttribute {
     private double batteryRemain;
     private double batteryCurrent;
     private Double batteryDischarge;
+    private double batteryTemperature;
 
     public Battery(){}
 
     public Battery(double batteryVoltage, double batteryRemain, double batteryCurrent,
-                   Double batteryDischarge) {
+                   Double batteryDischarge,
+                   double batteryTemperature) {
         this.batteryVoltage = batteryVoltage;
         this.batteryRemain = batteryRemain;
         this.batteryCurrent = batteryCurrent;
         this.batteryDischarge = batteryDischarge;
+        this.batteryTemperature = batteryTemperature;
     }
 
     public void setBatteryVoltage(double batteryVoltage) {
@@ -39,6 +42,10 @@ public class Battery implements DroneAttribute {
         this.batteryDischarge = batteryDischarge;
     }
 
+    public void setBatteryTemperature(double batteryTemperature){
+        this.batteryTemperature = batteryTemperature;
+    }
+
     public double getBatteryVoltage() {
         return batteryVoltage;
     }
@@ -55,6 +62,8 @@ public class Battery implements DroneAttribute {
         return batteryDischarge;
     }
 
+    public double getBatteryTemperature() {return batteryTemperature; }
+
     @Override
     public int describeContents() {
         return 0;
@@ -66,6 +75,7 @@ public class Battery implements DroneAttribute {
         dest.writeDouble(this.batteryRemain);
         dest.writeDouble(this.batteryCurrent);
         dest.writeValue(this.batteryDischarge);
+        dest.writeDouble(this.batteryTemperature);
     }
 
     private Battery(Parcel in) {
@@ -73,6 +83,7 @@ public class Battery implements DroneAttribute {
         this.batteryRemain = in.readDouble();
         this.batteryCurrent = in.readDouble();
         this.batteryDischarge = (Double) in.readValue(Double.class.getClassLoader());
+        this.batteryTemperature = in.readDouble();
     }
 
     public static final Creator<Battery> CREATOR = new Creator<Battery>() {
