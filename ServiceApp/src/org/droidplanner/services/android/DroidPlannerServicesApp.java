@@ -2,13 +2,15 @@ package org.droidplanner.services.android;
 
 import android.app.Application;
 
-import com.crashlytics.android.Crashlytics;
+//import com.crashlytics.android.Crashlytics;
+
+import com.tencent.bugly.crashreport.CrashReport;
 
 import org.droidplanner.services.android.utils.LogToFileTree;
 import org.droidplanner.services.android.utils.analytics.GAUtils;
 import org.droidplanner.services.android.utils.file.IO.ExceptionWriter;
 
-import io.fabric.sdk.android.Fabric;
+//import io.fabric.sdk.android.Fabric;
 import timber.log.Timber;
 
 public class DroidPlannerServicesApp extends Application {
@@ -20,7 +22,8 @@ public class DroidPlannerServicesApp extends Application {
         super.onCreate();
 
         if(BuildConfig.ENABLE_CRASHLYTICS) {
-            Fabric.with(this, new Crashlytics());
+//            Fabric.with(this, new Crashlytics());
+            CrashReport.initCrashReport(getApplicationContext(), "900014958", false);
         }
 
         if (BuildConfig.WRITE_LOG_FILE) {
