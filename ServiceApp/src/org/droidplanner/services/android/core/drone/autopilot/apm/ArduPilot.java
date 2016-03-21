@@ -725,7 +725,8 @@ public abstract class ArduPilot extends GenericMavLinkDrone {
         if (message.startsWith("ArduCopter") || message.startsWith("ArduPlane")
                 || message.startsWith("ArduRover") || message.startsWith("Solo")
                 || message.startsWith("APM:Copter") || message.startsWith("APM:Plane")
-                || message.startsWith("APM:Rover")) {
+                || message.startsWith("APM:Rover")
+                || message.startsWith("Humming")) {
             setFirmwareVersion(message);
         } else {
 
