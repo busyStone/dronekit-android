@@ -806,7 +806,7 @@ public class CommonApiUtils {
         if (!firmwareVersion.startsWith("APM:Copter V3.3")
                 && !firmwareVersion.startsWith("APM:Copter V3.4")
                 && !firmwareVersion.startsWith("Solo")
-                && !firmwareVersion.startsWith("Humming")) {
+                && !firmwareVersion.startsWith("SkyBorne:Copter")) {
             return false;
         }
 
