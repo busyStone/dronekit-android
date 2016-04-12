@@ -9,14 +9,14 @@ import android.os.Parcelable;
 public class Battery implements DroneAttribute {
 
     private double batteryVoltage;
-    private double batteryRemain;
-    private double batteryCurrent;
+    private Double batteryRemain;
+    private Double batteryCurrent;
     private Double batteryDischarge;
     private Double batteryTemperature;
 
     public Battery(){}
 
-    public Battery(double batteryVoltage, double batteryRemain, double batteryCurrent,
+    public Battery(double batteryVoltage, Double batteryRemain, Double batteryCurrent,
                    Double batteryDischarge,
                    Double batteryTemperature) {
         this.batteryVoltage = batteryVoltage;
@@ -30,11 +30,11 @@ public class Battery implements DroneAttribute {
         this.batteryVoltage = batteryVoltage;
     }
 
-    public void setBatteryRemain(double batteryRemain) {
+    public void setBatteryRemain(Double batteryRemain) {
         this.batteryRemain = batteryRemain;
     }
 
-    public void setBatteryCurrent(double batteryCurrent) {
+    public void setBatteryCurrent(Double batteryCurrent) {
         this.batteryCurrent = batteryCurrent;
     }
 
@@ -50,11 +50,11 @@ public class Battery implements DroneAttribute {
         return batteryVoltage;
     }
 
-    public double getBatteryRemain() {
+    public Double getBatteryRemain() {
         return batteryRemain;
     }
 
-    public double getBatteryCurrent() {
+    public Double getBatteryCurrent() {
         return batteryCurrent;
     }
 
@@ -72,16 +72,16 @@ public class Battery implements DroneAttribute {
     @Override
     public void writeToParcel(Parcel dest, int flags) {
         dest.writeDouble(this.batteryVoltage);
-        dest.writeDouble(this.batteryRemain);
-        dest.writeDouble(this.batteryCurrent);
+        dest.writeValue(this.batteryRemain);
+        dest.writeValue(this.batteryCurrent);
         dest.writeValue(this.batteryDischarge);
         dest.writeValue(this.batteryTemperature);
     }
 
     private Battery(Parcel in) {
         this.batteryVoltage = in.readDouble();
-        this.batteryRemain = in.readDouble();
-        this.batteryCurrent = in.readDouble();
+        this.batteryRemain = (Double) in.readValue(Double.class.getClassLoader());
+        this.batteryCurrent = (Double) in.readValue(Double.class.getClassLoader());
         this.batteryDischarge = (Double) in.readValue(Double.class.getClassLoader());
         this.batteryTemperature = (Double) in.readValue(Double.class.getClassLoader());
     }
