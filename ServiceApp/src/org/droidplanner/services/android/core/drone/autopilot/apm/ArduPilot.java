@@ -574,11 +574,34 @@ public abstract class ArduPilot extends GenericMavLinkDrone {
                 msg_battery_status status = (msg_battery_status)message;
                 double voltage = 0.0;
                 for (int i = 0; i < status.voltages.length; i++){
+                    if (status.voltages[i] == 0x0FFFF){
+                        continue;
+                    }
+
                     voltage += status.voltages[i];
                 }
 
-                processBatteryUpdate(voltage / 1000.0, status.battery_remaining,
-                        status.current_battery / 100.0, status.temperature / 100.0);
+                Double current = null, remaining = null, discharge = null, temperature = null;
+
+                if (status.battery_remaining != -1){
+                    remaining = (double)status.battery_remaining;
+                }
+
+                if (status.current_consumed != -1){
+                    discharge = (double)status.current_consumed;
+                }
+
+                if (status.temperature != 0x07FFF){
+                    temperature = (double)status.temperature;
+                }
+
+                if (status.current_battery != -1){
+                    current = (double)status.current_battery / 100.0;
+                }
+
+                processBatteryUpdate(voltage / 1000.0, current,
+                         remaining,discharge,
+                         temperature);
                 break;
 
             case msg_radio.MAVLINK_MSG_ID_RADIO:
@@ -771,18 +794,20 @@ public abstract class ArduPilot extends GenericMavLinkDrone {
         return (1 - battRemain / 100.0) * battCap.value;
     }
 
-    protected void processBatteryUpdate(double voltage, double remain, double current, double temperature) {
-        if (battery.getBatteryVoltage() != voltage
-                || battery.getBatteryRemain() != remain
-                || battery.getBatteryCurrent() != current
-                || battery.getBatteryTemperature() != temperature) {
+    protected void processBatteryUpdate(double voltage, Double current,
+                                        Double remain, Double consumed,
+                                        Double temperature) {
+//        if (battery.getBatteryVoltage() != voltage
+//                ||  battery.getBatteryRemain() != remain
+//                || battery.getBatteryCurrent() != current
+//                || battery.getBatteryTemperature() != temperature) {
             battery.setBatteryVoltage(voltage);
             battery.setBatteryRemain(remain);
             battery.setBatteryCurrent(current);
-            battery.setBatteryDischarge(getBattDischarge(remain));
+            battery.setBatteryDischarge(consumed);
             battery.setBatteryTemperature(temperature);
 
             notifyDroneEvent(DroneInterfaces.DroneEventsType.BATTERY);
-        }
+//        }
     }
 }
