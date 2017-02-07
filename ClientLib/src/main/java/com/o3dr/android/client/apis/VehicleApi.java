@@ -3,7 +3,6 @@ package com.o3dr.android.client.apis;
 import android.os.Bundle;
 
 import com.o3dr.android.client.Drone;
-import com.o3dr.services.android.lib.coordinate.LatLong;
 import com.o3dr.services.android.lib.coordinate.LatLongAlt;
 import com.o3dr.services.android.lib.drone.connection.ConnectionParameter;
 import com.o3dr.services.android.lib.drone.property.Parameters;
@@ -23,9 +22,11 @@ import static com.o3dr.services.android.lib.drone.action.StateActions.ACTION_ARM
 import static com.o3dr.services.android.lib.drone.action.StateActions.ACTION_ENABLE_RETURN_TO_ME;
 import static com.o3dr.services.android.lib.drone.action.StateActions.ACTION_SET_VEHICLE_HOME;
 import static com.o3dr.services.android.lib.drone.action.StateActions.ACTION_SET_VEHICLE_MODE;
+import static com.o3dr.services.android.lib.drone.action.StateActions.ACTION_UPDATE_VEHICLE_DATA_STREAM_RATE;
 import static com.o3dr.services.android.lib.drone.action.StateActions.EXTRA_ARM;
 import static com.o3dr.services.android.lib.drone.action.StateActions.EXTRA_EMERGENCY_DISARM;
 import static com.o3dr.services.android.lib.drone.action.StateActions.EXTRA_IS_RETURN_TO_ME_ENABLED;
+import static com.o3dr.services.android.lib.drone.action.StateActions.EXTRA_VEHICLE_DATA_STREAM_RATE;
 import static com.o3dr.services.android.lib.drone.action.StateActions.EXTRA_VEHICLE_HOME_LOCATION;
 import static com.o3dr.services.android.lib.drone.action.StateActions.EXTRA_VEHICLE_MODE;
 
@@ -53,11 +54,9 @@ public class VehicleApi extends Api {
     }
 
     private final Drone drone;
-    private final ControlApi controlApi;
 
     private VehicleApi(Drone drone) {
         this.drone = drone;
-        this.controlApi = ControlApi.getApi(drone);
     }
 
     /**
@@ -153,76 +152,6 @@ public class VehicleApi extends Api {
         drone.performAsyncAction(new Action(ACTION_WRITE_PARAMETERS, params));
     }
 
-    /*
-    Deprecated apis
-     */
-
-    /**
-     * @param altitude altitude in meters
-     * @deprecated Use {@link ControlApi#takeoff(double, AbstractCommandListener)} instead.
-     * Perform a guided take off.
-     */
-    public void takeoff(double altitude) {
-        controlApi.takeoff(altitude, null);
-    }
-
-    /**
-     * @param altitude altitude in meters
-     * @param listener Register a callback to receive update of the command execution state.
-     * @deprecated Use {@link ControlApi#takeoff(double, AbstractCommandListener)} instead.
-     * Perform a guided take off.
-     */
-    public void takeoff(double altitude, AbstractCommandListener listener) {
-        controlApi.takeoff(altitude, listener);
-    }
-
-    /**
-     * @param point guided point location
-     * @param force true to enable guided mode is required.
-     * @deprecated Use {@link ControlApi#goTo(LatLong, boolean, AbstractCommandListener)} instead.
-     * Send a guided point to the connected drone.
-     */
-    public void sendGuidedPoint(LatLong point, boolean force) {
-        controlApi.goTo(point, force, null);
-    }
-
-    /**
-     * @param point    guided point location
-     * @param force    true to enable guided mode is required.
-     * @param listener Register a callback to receive update of the command execution state.
-     * @deprecated Use {@link ControlApi#goTo(LatLong, boolean, AbstractCommandListener)} instead.
-     * Send a guided point to the connected drone.
-     */
-    public void sendGuidedPoint(LatLong point, boolean force, AbstractCommandListener listener) {
-        controlApi.goTo(point, force, listener);
-    }
-
-    /**
-     * @param altitude altitude in meters
-     * @deprecated Use {@link ControlApi#climbTo(double)} instead.
-     * Set the altitude for the guided point.
-     */
-    public void setGuidedAltitude(double altitude) {
-        controlApi.climbTo(altitude);
-    }
-
-    /**
-     * @deprecated Use {@link ControlApi#pauseAtCurrentLocation(AbstractCommandListener)} instead.
-     * Pause the vehicle at its current location.
-     */
-    public void pauseAtCurrentLocation() {
-        controlApi.pauseAtCurrentLocation(null);
-    }
-
-    /**
-     * @param listener Register a callback to receive update of the command execution state.
-     * @deprecated Use {@link ControlApi#pauseAtCurrentLocation(AbstractCommandListener)} instead.
-     * Pause the vehicle at its current location.
-     */
-    public void pauseAtCurrentLocation(final AbstractCommandListener listener) {
-        controlApi.pauseAtCurrentLocation(listener);
-    }
-
     /**
      * Changes the vehicle home location.
      *
@@ -244,5 +173,21 @@ public class VehicleApi extends Api {
         Bundle params = new Bundle();
         params.putBoolean(EXTRA_IS_RETURN_TO_ME_ENABLED, isEnabled);
         drone.performAsyncActionOnDroneThread(new Action(ACTION_ENABLE_RETURN_TO_ME, params), listener);
+    }
+
+    /**
+     * Update the vehicle data stream rate.
+     *
+     * Note: This is ineffective for Solo vehicles since their data stream rate is handled
+     * by the onboard companion computer.
+     *
+     * @param rate          The new data stream rate
+     * @param listener      Register a callback to receive update of the command execution state
+     * @since 2.9.0
+     */
+    public void updateVehicleDataStreamRate(int rate, final AbstractCommandListener listener){
+        Bundle params = new Bundle();
+        params.putInt(EXTRA_VEHICLE_DATA_STREAM_RATE, rate);
+        drone.performAsyncActionOnDroneThread(new Action(ACTION_UPDATE_VEHICLE_DATA_STREAM_RATE, params), listener);
     }
 }

@@ -18,16 +18,22 @@ android {
         }
     }
 
-    //FIXME: Remove when lint errors are taken care of.
     lintOptions {
         abortOnError false
     }
+
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_1_7
+        targetCompatibility JavaVersion.VERSION_1_7
+    }
+
+    buildToolsVersion '24.0.1'
 }
 
 dependencies {
     compile fileTree(dir: 'libs', include: ['*.jar'])
-    compile "com.android.support:appcompat-v7:${support_lib_version}"
-    compile "com.android.support:cardview-v7:${support_lib_version}"
+    compile "com.android.support:appcompat-v7:23.4.0"
+    compile "com.android.support:cardview-v7:23.4.0"
 
     compile project(':ClientLib')
 }

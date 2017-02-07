@@ -12,11 +12,20 @@ public class TLVMessageTypes {
     public static final int TYPE_SOLO_CABLE_CAM_OPTIONS = 4;
     public static final int TYPE_SOLO_GET_BUTTON_SETTING = 5;
     public static final int TYPE_SOLO_SET_BUTTON_SETTING = 6;
+    public static final int TYPE_SOLO_PAUSE_BUTTON = 7;
 
     public static final int TYPE_SOLO_FOLLOW_OPTIONS = 19;
     public static final int TYPE_SOLO_FOLLOW_OPTIONS_V2 = 119;
     public static final int TYPE_SOLO_SHOT_OPTIONS = 20;
     public static final int TYPE_SOLO_SHOT_ERROR = 21;
+
+    public static final int TYPE_SOLO_PANO_OPTIONS = 22;
+    public static final int TYPE_SOLO_ZIPLINE_OPTIONS = 23;
+    public static final int TYPE_SOLO_REWIND_OPTIONS = 24;
+    public static final int TYPE_SOLO_PANO_STATUS = 25;
+    public static final int TYPE_RTL_HOME_POINT = 26;
+    public static final int TYPE_SOLO_POWER_STATE = 27;
+    public static final int TYPE_SOLO_ZIPLINE_LOCK = 28;
 
     public static final int TYPE_SOLO_MESSAGE_SHOT_MANAGER_ERROR = 1000;
     public static final int TYPE_SOLO_CABLE_CAM_WAYPOINT = 1001;
